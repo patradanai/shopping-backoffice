@@ -59,6 +59,7 @@ const SignUpPage = () => {
         >
           {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
             <form onSubmit={handleSubmit}>
+              {/* fname + lname Form*/}
               <div className="flex mb-5">
                 <div className="w-full flex flex-col mx-1">
                   <label className="font-mono text-sm mb-1" htmlFor="fname">
@@ -93,6 +94,8 @@ const SignUpPage = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Email Form */}
               <div className="flex flex-col mb-5 mx-1">
                 <label className="font-mono text-sm mb-1" htmlFor="email">
                   Email
@@ -109,6 +112,8 @@ const SignUpPage = () => {
                   {errors.email ? errors.email : null}
                 </p>
               </div>
+
+              {/* Password Form */}
               <div className="flex flex-col mb-5 mx-1">
                 <label className="font-mono text-sm mb-1" htmlFor="password">
                   Password
@@ -125,6 +130,8 @@ const SignUpPage = () => {
                   {errors.password ? errors.password : null}
                 </p>
               </div>
+
+              {/* Repassword Form */}
               <div className="flex flex-col mb-10 mx-1">
                 <label className="font-mono text-sm mb-1" htmlFor="rePassword">
                   Retype Password
@@ -141,6 +148,8 @@ const SignUpPage = () => {
                   {errors.rePassword ? errors.rePassword : null}
                 </p>
               </div>
+
+              {/*  Button  */}
               <div className="text-center">
                 <button
                   type="submit"

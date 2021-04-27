@@ -1,13 +1,11 @@
 import React from "react";
-
+import ModalProduct from "../../../components/ModalProduct";
 const ProductDashboard = () => {
   return (
     <div className="w-full p-5">
-      <div className="flex space-x-3 mb-5">
+      <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Products</p>
-        <button className="bg-red-300 rounded px-3 py-1 text-white">
-          Add Product
-        </button>
+        <ModalProduct />
       </div>
       <div className="w-full">
         <table className="w-full table-auto">

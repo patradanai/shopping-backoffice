@@ -3,7 +3,7 @@ import ModalStaff from "../../../components/ModalStaff";
 const StaffDashboard = () => {
   return (
     <div className="w-full p-5">
-      <div className="flex space-x-3 mb-5">
+      <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Member </p>
         <ModalStaff />
       </div>
