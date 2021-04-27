@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import Modal from "react-modal";
-import Image from "next/image";
 
 const customStyles = {
   content: {
