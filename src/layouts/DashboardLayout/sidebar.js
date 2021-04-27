@@ -39,7 +39,7 @@ const SideBar = () => {
           </li>
           <li className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2">
             <SettingIcon className="w-6 h-6 text-gray-400 mr-2" />
-            Setting
+            Settings
           </li>
         </ul>
       </div>
