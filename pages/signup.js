@@ -38,7 +38,8 @@ const SignUp = () => {
             ),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
+            setTimeout(async () => {
+              const res = await axios.post("")
               setSubmitting(false);
             }, 300);
           }}
@@ -131,7 +132,7 @@ const SignUp = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-400 rounded py-2 text-white px-20"
+                  className="bg-blue-400 rounded py-2 text-white px-20 hover:bg-gray-200 hover:text-black"
                 >
                   Register
                 </button>

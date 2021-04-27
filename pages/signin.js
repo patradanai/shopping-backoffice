@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axios from "../src/utils/api/shopping";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -7,9 +7,6 @@ import * as Yup from "yup";
 const initiaValues = {
   email: "",
   password: "",
-  rePassword: "",
-  fname: "",
-  lname: "",
 };
 
 const SignIn = () => {
@@ -20,7 +17,7 @@ const SignIn = () => {
         style={{ maxWidth: 620, width: "100%" }}
       >
         {/* Header Title */}
-        <div className="font-mono text-3xl mb-10 text-center">Signup</div>
+        <div className="font-mono text-3xl mb-10 text-center">SignIn</div>
 
         {/* Form Validate */}
         <Formik
@@ -29,56 +26,25 @@ const SignIn = () => {
             email: Yup.string()
               .email("Invalid Email")
               .required("Require Email"),
-            fname: Yup.string().required("Require FirstName"),
-            lname: Yup.string().required("Require LastName"),
             password: Yup.string().min(8, "Minimun Password is 8 Char"),
-            rePassword: Yup.string().oneOf(
-              [Yup.ref("password"), null],
-              "Password is not match"
-            ),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
+            console.log(values);
+            setTimeout(async () => {
+              const res = await axios.post("/signin", {
+                data: { email: values.email, password: values.passoword },
+              });
+
+              if (res.ok) {
+                console.log(res.data);
+              }
+
               setSubmitting(false);
             }, 300);
           }}
         >
           {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
             <form onSubmit={handleSubmit}>
-              <div className="flex mb-5">
-                <div className="w-full flex flex-col mx-1">
-                  <label className="font-mono text-sm mb-1" htmlFor="fname">
-                    FirstName
-                  </label>
-                  <input
-                    className="p-2 rounded border border-gray-300 focus:border-black"
-                    type="text"
-                    name="fname"
-                    id="fname"
-                    onChange={handleChange}
-                    value={values.fname}
-                  />
-                  <p className="text-sm text-red-300">
-                    {errors.fname ? errors.fname : null}
-                  </p>
-                </div>
-                <div className="flex flex-col mx-1">
-                  <label className="font-mono text-sm mb-1" htmlFor="lname">
-                    LastName
-                  </label>
-                  <input
-                    className="p-2 rounded border border-gray-300 focus:border-black"
-                    type="text"
-                    name="lname"
-                    id="lname"
-                    onChange={handleChange}
-                    value={values.lname}
-                  />
-                  <p className="text-sm text-red-300">
-                    {errors.lname ? errors.lname : null}
-                  </p>
-                </div>
-              </div>
               <div className="flex flex-col mb-5 mx-1">
                 <label className="font-mono text-sm mb-1" htmlFor="email">
                   Email
@@ -111,37 +77,21 @@ const SignIn = () => {
                   {errors.password ? errors.password : null}
                 </p>
               </div>
-              <div className="flex flex-col mb-10 mx-1">
-                <label className="font-mono text-sm mb-1" htmlFor="rePassword">
-                  Retype Password
-                </label>
-                <input
-                  className="p-2 rounded border border-gray-300 focus:border-black"
-                  type="password"
-                  name="rePassword"
-                  id="rePassword"
-                  onChange={handleChange}
-                  value={values.rePassword}
-                />
-                <p className="text-sm text-red-300">
-                  {errors.rePassword ? errors.rePassword : null}
-                </p>
-              </div>
               <div className="text-center">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-400 rounded py-2 text-white px-20"
+                  className="bg-blue-400 rounded py-2 text-white px-20 hover:bg-gray-200 hover:text-black"
                 >
-                  Register
+                  Signin
                 </button>
               </div>
               <div className="mt-10">
                 <p className="text-sm">
-                  If you already have a member!{" "}
+                  If you don't have a member!{" "}
                   <Link href="/signin">
                     <span className="text-gray-500 underline cursor-pointer">
-                      Go to Signin
+                      Join with us
                     </span>
                   </Link>
                 </p>
