@@ -6,7 +6,7 @@ import SettingDashboard from "./Settings";
 import StaffDashboard from "./Staff";
 
 const DashboardComponentPage = () => {
-  return <div> Dashboard Comp</div>;
+  return <div>Dashboard Comp</div>;
 };
 
 export default DashboardComponentPage;
