@@ -1,10 +1,10 @@
 import React from "react";
 import LayoutDashBoard from "../src/layouts/DashboardLayout";
-
+import DashboardComponentPage from "../src/pages/Dashboard";
 const DashboardPage = () => {
   return (
     <LayoutDashBoard>
-      <div>DashboardPage</div>
+      <DashboardComponentPage />
     </LayoutDashBoard>
   );
 };
