@@ -1,5 +1,5 @@
-import React from "react";
-import axios from "../src/utils/api/shopping";
+import React, { useState } from "react";
+import { axios } from "../src/utils/api/shopping";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -31,12 +31,17 @@ const SignIn = () => {
           onSubmit={(values, { setSubmitting }) => {
             console.log(values);
             setTimeout(async () => {
-              const res = await axios.post("/signin", {
-                data: { email: values.email, password: values.passoword },
-              });
-
-              if (res.ok) {
-                console.log(res.data);
+              try {
+                const res = await axios.post(
+                  "/auth/signin",
+                  { username: values.email, password: values.password },
+                  {}
+                );
+                if ((res.status = 200)) {
+                  console.log(res.data);
+                }
+              } catch (err) {
+                console.error(err.message);
               }
 
               setSubmitting(false);
@@ -89,7 +94,7 @@ const SignIn = () => {
               <div className="mt-10">
                 <p className="text-sm">
                   If you don't have a member!{" "}
-                  <Link href="/signin">
+                  <Link href="/signup">
                     <span className="text-gray-500 underline cursor-pointer">
                       Join with us
                     </span>

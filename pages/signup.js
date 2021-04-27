@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import { axios } from "../src/utils/api/shopping";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -39,7 +39,20 @@ const SignUp = () => {
           })}
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(async () => {
-              const res = await axios.post("")
+              try {
+                const res = await axios.post(
+                  "/auth/signup",
+                  {
+                    email: values.email,
+                    fname: values.fname,
+                    lname: values.lname,
+                    password: values.password,
+                  },
+                  {}
+                );
+              } catch (err) {
+                console.error(err.message);
+              }
               setSubmitting(false);
             }, 300);
           }}
