@@ -10,6 +10,15 @@ import HistoryIcon from "../../components/icons/History";
 
 const SideBar = () => {
   const context = useContext(Context);
+
+  const Active = () => {
+    return "h-10 flex items-center bg-gray-200 bg-opacity-40 rounded px-2 cursor-pointer";
+  };
+
+  const Inactive = () => {
+    return "h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer";
+  };
+
   return (
     <div className="w-1/4 py-5 px-5 shadow" style={{ background: "#43379c" }}>
       <div className="text-xl flex items-center">
@@ -19,42 +28,55 @@ const SideBar = () => {
       <div className="text-white mt-5">
         <ul>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            className={
+              context.state.DashboardPage === 0 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(0)}
           >
             <HomeIcon className="w-6 h-6 text-gray-400 mr-2" />
             Dashboard
           </li>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            className={
+              context.state.DashboardPage === 1 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(1)}
           >
             <TeamIcon className="w-6 h-6 text-gray-400 mr-2" />
             Staff Management
           </li>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            cl
+            className={
+              context.state.DashboardPage === 2 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(2)}
           >
             <ProductIcon className="w-6 h-6 text-gray-400 mr-2" />
-            Product
+            Products
           </li>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            className={
+              context.state.DashboardPage === 3 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(3)}
           >
             <OrderIcon className="w-6 h-6 text-gray-400 mr-2" />
-            Order
+            Orders
           </li>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            className={
+              context.state.DashboardPage === 4 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(4)}
           >
             <HistoryIcon className="w-6 h-6 text-gray-400 mr-2" />
-            History
+            Logs
           </li>
           <li
-            className="h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer"
+            className={
+              context.state.DashboardPage === 5 ? Active() : Inactive()
+            }
             onClick={() => context.DashPageFunc(5)}
           >
             <SettingIcon className="w-6 h-6 text-gray-400 mr-2" />
