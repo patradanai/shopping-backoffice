@@ -1,13 +1,11 @@
 import React from "react";
-
+import ModalStaff from "../../../components/ModalStaff";
 const StaffDashboard = () => {
   return (
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5">
         <p className="text-3xl font-serif">Member </p>
-        <button className="bg-red-300 rounded px-3 py-1 text-white">
-          Add Member
-        </button>
+        <ModalStaff />
       </div>
       <div className="w-full">
         <table className="w-full table-auto">
