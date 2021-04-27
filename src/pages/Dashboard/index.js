@@ -16,9 +16,9 @@ const DashboardComponentPage = () => {
       case 1:
         return <StaffDashboard />;
       case 2:
-        return <OrderDashboard />;
-      case 3:
         return <ProductDashboard />;
+      case 3:
+        return <OrderDashboard />;
       case 4:
         return <HistoryDashboard />;
       case 5:

@@ -11,7 +11,7 @@ import HistoryIcon from "../../components/icons/History";
 const SideBar = () => {
   const context = useContext(Context);
   return (
-    <div className="w-1/4 py-5 px-5" style={{ background: "#43379c" }}>
+    <div className="w-1/4 py-5 px-5 shadow" style={{ background: "#43379c" }}>
       <div className="text-xl flex items-center">
         <ShopIcon className="w-10 h-10 text-gray-400" />
         <p className="text-white font-sans ml-2 font-semibold">E-Commerce</p>
