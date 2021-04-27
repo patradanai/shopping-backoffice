@@ -12,7 +12,7 @@ const initiaValues = {
   lname: "",
 };
 
-const SignUp = () => {
+const SignUpPage = () => {
   return (
     <div className="bg-gray-300 flex w-full min-h-screen justify-center items-center">
       <div
@@ -168,4 +168,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;

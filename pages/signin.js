@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { axios } from "../src/utils/api/shopping";
 import Link from "next/link";
 import { Formik } from "formik";
@@ -9,7 +10,9 @@ const initiaValues = {
   password: "",
 };
 
-const SignIn = () => {
+const SignInPage = () => {
+  const [isLogin, setIsLogin] = useState(false);
+
   return (
     <div className="bg-gray-300 flex w-full min-h-screen justify-center items-center">
       <div
@@ -18,7 +21,11 @@ const SignIn = () => {
       >
         {/* Header Title */}
         <div className="font-mono text-3xl mb-10 text-center">SignIn</div>
-
+        {isLogin ? (
+          <p className="mx-2 mb-3 p-2 text-black text-center h-10 bg-red-200 rounded">
+            Welcome Back
+          </p>
+        ) : null}
         {/* Form Validate */}
         <Formik
           initialValues={initiaValues}
@@ -29,7 +36,6 @@ const SignIn = () => {
             password: Yup.string().min(8, "Minimun Password is 8 Char"),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
             setTimeout(async () => {
               try {
                 const res = await axios.post(
@@ -38,7 +44,9 @@ const SignIn = () => {
                   {}
                 );
                 if ((res.status = 200)) {
-                  console.log(res.data);
+                  const token = res.data.token;
+                  Cookies.set("token", token, { expires: 1 });
+                  setIsLogin(true);
                 }
               } catch (err) {
                 console.error(err.message);
@@ -109,4 +117,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInPage;
