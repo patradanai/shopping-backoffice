@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { axios } from "../../../utils/api/shopping";
 import ModalStaff from "../../../components/ModalStaff";
 const StaffDashboard = () => {
+  useEffect(() => {
+    axios
+      .get("/auth/user/1/all", { Headers: {} })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.status, err.response.data?.Error);
+        }
+      });
+  }, []);
+
   return (
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5 items-center">
