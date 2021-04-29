@@ -18,7 +18,6 @@ const StaffDashboard = () => {
       })
       .then((res) => {
         setListStaff(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         if (err.response) {

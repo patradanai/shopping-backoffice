@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import Cookie from "js-cookie";
+import { Context } from "../../../context/Dashboard.reducer";
 import WithAuth from "../../../components/WithAuth";
+import { axios } from "../../../utils/api/shopping";
+import ListLog from "./ListLog";
 
 const HistoryDashboard = () => {
+  const context = useContext(Context);
+  const [Logs, setLogs] = useState(null);
+
+  useEffect(() => {
+    const token = Cookie.get("token");
+    axios
+      .get(`/db_log/logs/${context.state.shopDetails.shopId}`, {
+        headers: { authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setLogs(res.data?.logs);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5">
@@ -20,14 +42,9 @@ const HistoryDashboard = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+            {Logs?.map((data, index) => (
+              <ListLog logs={data} key={index} />
+            ))}
           </tbody>
         </table>
       </div>
