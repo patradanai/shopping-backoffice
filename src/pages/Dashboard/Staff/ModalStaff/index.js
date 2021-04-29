@@ -33,7 +33,7 @@ const ModalStaff = () => {
       >
         Add Member
       </button>
-      <Modal isOpen={isOpen} style={customStyles}>
+      <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
         <div style={{ width: 620 }}>
           {/* Header form */}
           <div className="bg-blue-300 h-10 p-2 text-center">

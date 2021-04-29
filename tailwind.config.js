@@ -5,7 +5,7 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: { tableLayout: ["hover", "focus"] },
     animation: ["responsive", "motion-safe", "motion-reduce"],
   },
   plugins: [],

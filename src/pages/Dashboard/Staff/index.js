@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
+import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
-import ModalStaff from "../../../components/ModalStaff";
+import ModalStaff from "./ModalStaff";
+
 const StaffDashboard = () => {
   useEffect(() => {
+    const token = Cookie.get("token");
     axios
-      .get("/auth/user/1/all", { Headers: {} })
+      .get("/auth/user/1/all", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         console.log(res);
       })
