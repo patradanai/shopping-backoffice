@@ -5,11 +5,18 @@ import { axios } from "../../../utils/api/shopping";
 import ModalProduct from "./ModalProduct";
 import ListProduct from "./ListProduct";
 import WithAuth from "../../../components/WithAuth";
+import Pagination from "../../../components/Pagination";
 
 const ProductDashboard = () => {
   const context = useContext(Context);
+  const [page, setPage] = useState(1);
   const [products, setProducts] = useState(null);
   const token = Cookie.get("token");
+
+  const onChangePage = (payload) => {
+    setPage(payload);
+  };
+
   /**
    *  Fetch all shop's product
    */
@@ -71,6 +78,15 @@ const ProductDashboard = () => {
             </tbody>
           )}
         </table>
+      </div>
+      <div className="flex  w-full justify-between  mt-1">
+        <p>Showing 1 of 1 of 1 entries</p>
+        <Pagination
+          allCounter={10}
+          counter={5}
+          onChangeCounter={onChangePage}
+          focusCounter={page}
+        />
       </div>
     </div>
   );

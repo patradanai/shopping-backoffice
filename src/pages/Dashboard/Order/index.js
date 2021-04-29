@@ -3,8 +3,15 @@ import WithAuth from "../../../components/WithAuth";
 import { Context } from "../../../context/Dashboard.reducer";
 import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
+import Pagination from "../../../components/Pagination";
 
 const OrderDashboard = () => {
+  const [page, setPage] = useState(1);
+
+  const onChangePage = (payload) => {
+    setPage(payload);
+  };
+
   return (
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5">
@@ -36,6 +43,15 @@ const OrderDashboard = () => {
             </tr>
           </tbody>
         </table>
+      </div>
+      <div className="flex  w-full justify-between  mt-1">
+        <p>Showing 1 of 1 of 1 entries</p>
+        <Pagination
+          allCounter={10}
+          counter={5}
+          onChangeCounter={onChangePage}
+          focusCounter={page}
+        />
       </div>
     </div>
   );

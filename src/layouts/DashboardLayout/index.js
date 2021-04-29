@@ -11,7 +11,6 @@ const DashboardLayout = (props) => {
         <div className="flex flex-col w-full">
           <Header />
           <div className="h-full flex-grow">{props.children}</div>
-          <Footer />
         </div>
       </div>
     </div>

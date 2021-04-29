@@ -35,8 +35,8 @@ const HistoryDashboard = () => {
       <div className="flex space-x-3 mb-5">
         <p className="text-3xl font-serif">Logs</p>
       </div>
-      <div className="w-full">
-        <table className="w-full table-auto">
+      <div className="w-full h-full">
+        <table className="w-full h-full table-auto">
           <thead>
             <tr className="bg-white h-10 border-b text-center">
               <th>Id</th>
@@ -66,7 +66,8 @@ const HistoryDashboard = () => {
           )}
         </table>
       </div>
-      <div className="flex w-full justify-center">
+      <div className="flex  w-full justify-between  mt-1">
+        <p>Showing 1 of 1 of 1 entries</p>
         <Pagination
           allCounter={10}
           counter={5}

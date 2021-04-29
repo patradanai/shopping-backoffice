@@ -4,10 +4,17 @@ import { axios } from "../../../utils/api/shopping";
 import ModalStaff from "./ModalStaff";
 import ListStaff from "./ListStaff";
 import WithAuth from "../../../components/WithAuth";
+import Pagination from "../../../components/Pagination";
 
 const StaffDashboard = () => {
   const [isLoading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
   const [listStaff, setListStaff] = useState(null);
+
+  const onChangePage = (payload) => {
+    setPage(payload);
+  };
+
   useEffect(() => {
     const token = Cookie.get("token");
     axios
@@ -64,6 +71,15 @@ const StaffDashboard = () => {
             </tbody>
           )}
         </table>
+      </div>
+      <div className="flex  w-full justify-between  mt-1">
+        <p>Showing 1 of 1 of 1 entries</p>
+        <Pagination
+          allCounter={10}
+          counter={5}
+          onChangeCounter={onChangePage}
+          focusCounter={page}
+        />
       </div>
     </div>
   );
