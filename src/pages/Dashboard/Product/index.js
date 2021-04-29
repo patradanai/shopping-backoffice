@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { Context } from "../../../context/Dashboard.reducer";
 import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
 import ModalProduct from "./ModalProduct";
@@ -6,27 +7,30 @@ import ListProduct from "./ListProduct";
 import WithAuth from "../../../components/WithAuth";
 
 const ProductDashboard = () => {
+  const context = useContext(Context);
   const [products, setProducts] = useState(null);
   const token = Cookie.get("token");
   /**
    *  Fetch all shop's product
    */
   useEffect(() => {
-    axios
-      .get("/db_product/1/products", {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const newSort = res.data?.data.sort((a, b) => b.id - a.id);
-        setProducts(res.data.data);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.status, err.response.data?.Error);
-        }
-      });
+    if (context.state.shopDetails?.shopId) {
+      axios
+        .get(`/db_product/${context.state.shopDetails?.shopId}/products`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const newSort = res.data?.data.sort((a, b) => b.id - a.id);
+          setProducts(res.data.data);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.status, err.response.data?.Error);
+          }
+        });
+    }
   }, []);
 
   return (

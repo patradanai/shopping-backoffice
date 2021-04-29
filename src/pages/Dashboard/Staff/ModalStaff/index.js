@@ -1,5 +1,8 @@
 import React, { useState, useContext } from "react";
+import Cookie from "js-cookie";
+import LoadingButton from "../../../../components/LoadingButton";
 import { Context } from "../../../../context/Dashboard.reducer";
+import { axios } from "../../../../utils/api/shopping";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import Modal from "react-modal";
@@ -22,11 +25,15 @@ const initialValues = {
   rePassword: "",
   fname: "",
   lname: "",
+  phone: "",
 };
 
 const ModalStaff = () => {
   const context = useContext(Context);
   const [isOpen, setIsOpen] = useState(false);
+  const [showMessage, setShowMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <div>
       <button
@@ -47,6 +54,7 @@ const ModalStaff = () => {
               email: Yup.string()
                 .email("Invalid Email")
                 .required("Require Email"),
+              phone: Yup.string().required("Require Phone"),
               fname: Yup.string().required("Require FirstName"),
               lname: Yup.string().required("Require LastName"),
               password: Yup.string().min(8, "Minimun Password is 8 Char"),
@@ -56,12 +64,34 @@ const ModalStaff = () => {
               ),
             })}
             onSubmit={(values, { setSubmitting }) => {
+              const token = Cookie.get("token");
+              setIsLoading(false);
               setTimeout(async () => {
-                try {
-                } catch (err) {
-                  console.error(err.message);
-                }
-                setSubmitting(false);
+                //Fetching Moderator
+                axios
+                  .post(
+                    "/auth/signup/moderator",
+                    {
+                      email: values.email,
+                      fname: values.fname,
+                      lname: values.lname,
+                      password: values.password,
+                      phone: values.phone,
+                    },
+                    {
+                      headers: { authorization: `Bearer ${token}` },
+                    }
+                  )
+                  .then((res) => {
+                    setSubmitting(false);
+                    setIsOpen(false);
+                    setIsLoading(true);
+                  })
+                  .catch((err) => {
+                    setShowMessage("Found Problem Try Again!!!!");
+                    setIsLoading(true);
+                    console.log(err);
+                  });
               }, 300);
             }}
           >
@@ -125,6 +155,23 @@ const ModalStaff = () => {
                     {errors.email ? errors.email : null}
                   </p>
                 </div>
+                {/* Email form */}
+                <div className="flex flex-col mb-5 mx-1">
+                  <label className="font-mono text-sm mb-1" htmlFor="email">
+                    Phone
+                  </label>
+                  <input
+                    className="p-2 rounded border border-gray-300 focus:border-black"
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    onChange={handleChange}
+                    value={values.phone}
+                  />
+                  <p className="text-sm text-red-300">
+                    {errors.phone ? errors.phone : null}
+                  </p>
+                </div>
 
                 {/* Password form */}
                 <div className="flex flex-col mb-5 mx-1">
@@ -164,25 +211,38 @@ const ModalStaff = () => {
                     {errors.rePassword ? errors.rePassword : null}
                   </p>
                 </div>
+
                 <p className="text-sm text-red-300">
                   Remark : Default Role is only Staff.
                 </p>
+
+                {/* Show Message */}
+                {showMessage ? (
+                  <p className="text-sm text-red-300">{showMessage}</p>
+                ) : null}
                 {/* Button */}
-                <div className="text-center space-x-3 my-5">
-                  <button
-                    type="button"
-                    disabled={isSubmitting}
-                    className="bg-blue-300 py-2 rounded text-white px-10"
-                  >
-                    Save
-                  </button>
-                  <button
-                    className="bg-red-300 py-2 rounded text-white px-10"
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {isLoading ? (
+                  <div className="text-center space-x-3 my-5">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-blue-300 py-2 rounded text-white px-10 hover:bg-gray-300"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-red-300 py-2 rounded text-white px-10 hover:bg-gray-300"
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex justify-center mb-5">
+                    <LoadingButton />
+                  </div>
+                )}
               </form>
             )}
           </Formik>

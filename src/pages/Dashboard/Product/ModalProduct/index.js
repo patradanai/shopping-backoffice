@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Modal from "react-modal";
 import Image from "next/image";
+import { Context } from "../../../../context/Dashboard.reducer";
 import Thumbnail from "../../../../components/ThumbImage";
 import LoadingButton from "../../../../components/LoadingButton";
 import { axios } from "../../../../utils/api/shopping";
@@ -40,6 +41,7 @@ const handleImageUpdate = (image, onUploadProgress) => {
 };
 
 const ModalProduct = ({ token }) => {
+  const context = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
   const [showMessage, setShowMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -109,9 +111,12 @@ const ModalProduct = ({ token }) => {
               setIsLoading(false);
               setTimeout(() => {
                 // Fetching New Product
+                if (!context.state.shopDetails?.shopId) {
+                  return;
+                }
                 axios
                   .post(
-                    "/db_product/1/product",
+                    `/db_product/${context.state.shopDetails?.shopId}/product`,
                     {
                       name: values.name,
                       price: values.price,
