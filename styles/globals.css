@@ -18,3 +18,44 @@ a {
 * {
   box-sizing: border-box;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul .pagination {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+ul.pagination li {
+  display: inline-block;
+  text-align: center;
+  min-width: 30px;
+  padding: 5px 5px 5px 5px;
+  border-radius: 5px;
+  border: 1px solid rgb(40, 109, 201);
+}
+
+ul.pagination li a {
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.pagination li.active {
+  border: 1px solid #d3d3d3;
+  background-color: #0083ff;
+  color: #fff;
+}
+
+.pagination li:hover {
+  background-color: #67b6ff;
+  opacity: 50%;
+}
+
+.pagination li a:focus {
+  outline: none;
+}

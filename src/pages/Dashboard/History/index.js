@@ -4,10 +4,16 @@ import { Context } from "../../../context/Dashboard.reducer";
 import WithAuth from "../../../components/WithAuth";
 import { axios } from "../../../utils/api/shopping";
 import ListLog from "./ListLog";
+import Pagination from "../../../components/Pagination";
 
 const HistoryDashboard = () => {
   const context = useContext(Context);
+  const [page, setPage] = useState(1);
   const [Logs, setLogs] = useState(null);
+
+  const onChangePage = (payload) => {
+    setPage(payload);
+  };
 
   useEffect(() => {
     const token = Cookie.get("token");
@@ -59,6 +65,14 @@ const HistoryDashboard = () => {
             </tbody>
           )}
         </table>
+      </div>
+      <div className="flex w-full justify-center">
+        <Pagination
+          allCounter={10}
+          counter={5}
+          onChangeCounter={onChangePage}
+          focusCounter={page}
+        />
       </div>
     </div>
   );
