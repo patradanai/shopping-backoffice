@@ -4,7 +4,7 @@ import { Context } from "../../../context/Dashboard.reducer";
 import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
 import Pagination from "../../../components/Pagination";
-
+import ModalOrder from "./ModalOrder";
 const OrderDashboard = () => {
   const [page, setPage] = useState(1);
 
@@ -16,9 +16,7 @@ const OrderDashboard = () => {
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5">
         <p className="text-3xl font-serif">Orders</p>
-        <button className="bg-red-300 rounded px-3 py-1 text-white">
-          Add Order
-        </button>
+        <ModalOrder />
       </div>
       <div className="w-full">
         <table className="w-full table-auto">

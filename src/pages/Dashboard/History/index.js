@@ -33,7 +33,7 @@ const HistoryDashboard = () => {
   return (
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5">
-        <p className="text-3xl font-serif">Logs</p>
+        <p className="text-3xl font-serif">Audit Logs</p>
       </div>
       <div className="w-full h-full">
         <table className="w-full h-full table-auto">
