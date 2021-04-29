@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Modal from "react-modal";
+import Image from "next/image";
 import Thumbnail from "../../../../components/ThumbImage";
+import LoadingButton from "../../../../components/LoadingButton";
 import { axios } from "../../../../utils/api/shopping";
 import Toggle from "../../../../components/Toggle";
 
@@ -23,38 +25,41 @@ const customStyles = {
 const FILE_SIZE = 2097152;
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
-const initialValues = {
-  name: "",
-  price: 0,
-  quantity: 0,
-  description: "",
-  category: 0,
-  imageSrc: "",
-  file: "",
+const handleImageUpdate = (image, onUploadProgress) => {
+  let fd = new FormData();
+  fd.append("product", image);
+
+  if (fd) {
+    return axios.post("db_image/footage/product", fd, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress,
+    });
+  }
 };
 
-const ModalProduct = () => {
+const ModalProduct = ({ token }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState(null);
   const [isToggle, setToggle] = useState(true);
   const [category, setCategory] = useState(null);
+  const [image, setImage] = useState(null);
 
-  const handleToggle = (state) => {
-    console.log(state);
-    setToggle(state);
+  const initialValues = {
+    name: "",
+    price: 0,
+    quantity: 0,
+    description: "",
+    category: 0,
+    isActive: isToggle || true,
+    imageSrc: image || "",
+    file: file || "",
   };
 
-  const handleImageUpdate = (image, onUploadProgress) => {
-    let fd = new FormData();
-    fd.append("product", image);
-
-    if (fd) {
-      return axios.post("db_image/footage/product", fd, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress,
-      });
-    }
+  const handleToggle = (state) => {
+    setToggle(state);
   };
 
   useEffect(() => {
@@ -87,7 +92,6 @@ const ModalProduct = () => {
                 .min(0, "Minimun is 0 price")
                 .required("Price is required"),
               description: Yup.string().required("Description is required"),
-              imageSrc: Yup.string().required(),
               file: Yup.mixed()
                 .test(
                   "fileSize",
@@ -101,11 +105,34 @@ const ModalProduct = () => {
                 ),
             })}
             onSubmit={(values, { setSubmitting }) => {
+              setIsLoading(false);
               setTimeout(() => {
-                handleImageUpdate(values.file, (event) => {}).then((res) => {
-                  console.log(res);
-                });
-                setSubmitting(false);
+                axios
+                  .post(
+                    "/db_product/1/product",
+                    {
+                      name: values.name,
+                      price: values.price,
+                      isActive: values.isActive,
+                      imageSrc: values.imageSrc,
+                      description: values.description,
+                      categoryId: values.description,
+                      quanlity: values.quantity,
+                    },
+                    {
+                      headers: {
+                        authorization: `Bearer ${token}`,
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    setSubmitting(false);
+                    setIsOpen(false);
+                    setIsLoading(true);
+                  })
+                  .catch((err) => {
+                    console.error(err.message);
+                  });
               }, 300);
             }}
           >
@@ -120,24 +147,35 @@ const ModalProduct = () => {
             }) => (
               <form onSubmit={handleSubmit} className="px-10">
                 {/* Image  */}
-                <div className="flex justify-center mt-3 mb-5">
+                <div className="flex flex-col justify-center items-center mt-3 mb-5">
                   <div className="w-32 h-32 rounded-full bg-gray-400 overflow-hidden flex items-center justify-center">
-                    <Thumbnail file={values.file} />
-
-                    {values.file ? null : <label htmlFor="file">คลิก</label>}
+                    {/* <Thumbnail file={values.file} /> */}
+                    <label htmlFor="file">
+                      <Image
+                        src={values.imageSrc || "/images/no-photos.png"}
+                        width={128}
+                        height={128}
+                      />
+                    </label>
                     <input
                       id="file"
                       name="file"
                       type="file"
                       className="hidden"
                       onChange={(event) => {
-                        setFieldValue("file", event.currentTarget.files[0]);
-                        handleImageUpdate(event.currentTarget.files[0]);
+                        const file = event.currentTarget.files[0];
+                        setFile(file);
+                        setFieldValue("file", file);
+                        handleImageUpdate(file).then((res) => {
+                          setImage(res.data?.image);
+                        });
                       }}
                     />
                   </div>
+                  <p className="text-sm text-red-300">
+                    {errors.file || touched.file ? errors.file : null}
+                  </p>
                 </div>
-
                 {/* Product Name */}
                 <div className="mb-5 flex flex-col">
                   <div className="flex">
@@ -209,7 +247,9 @@ const ModalProduct = () => {
                     </select>
                   </div>
                   <p className="text-sm text-red-300">
-                    {errors.price || touched.price ? errors.price : null}
+                    {errors.category || touched.category
+                      ? errors.category
+                      : null}
                   </p>
                 </div>
 
@@ -224,9 +264,6 @@ const ModalProduct = () => {
                     </label>
                     <Toggle state={isToggle} onChangeToggle={handleToggle} />
                   </div>
-                  <p className="text-sm text-red-300">
-                    {errors.price || touched.price ? errors.price : null}
-                  </p>
                 </div>
 
                 {/* Description */}
@@ -254,22 +291,28 @@ const ModalProduct = () => {
                 </div>
 
                 {/* Button */}
-                <div className="text-center space-x-3 my-5">
-                  <button
-                    type="button"
-                    disabled={isSubmitting}
-                    className="bg-blue-300 py-2 rounded text-white px-10"
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="bg-red-300 py-2 rounded text-white px-10"
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {isLoading ? (
+                  <div className="text-center space-x-3 my-5">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-blue-300 py-2 rounded text-white px-10 hover:bg-gray-300"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-red-300 py-2 rounded text-white px-10 hover:bg-gray-300"
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex justify-center mb-5">
+                    <LoadingButton />
+                  </div>
+                )}
               </form>
             )}
           </Formik>

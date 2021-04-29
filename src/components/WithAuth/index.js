@@ -28,7 +28,7 @@ const WithAuth = (WrappedComponent) => {
         this.setState({ isLoading: false });
       } else {
         setTimeout(() => {
-          Router.replace("/login");
+          Router.replace("/signin");
         }, 2000);
       }
     }

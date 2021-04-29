@@ -5,11 +5,11 @@ import ModalProduct from "./ModalProduct";
 import ListProduct from "./ListProduct";
 const ProductDashboard = () => {
   const [products, setProducts] = useState(null);
+  const token = Cookie.get("token");
   /**
    *  Fetch all shop's product
    */
   useEffect(() => {
-    const token = Cookie.get("token");
     axios
       .get("/db_product/1/products", {
         headers: {
@@ -31,7 +31,7 @@ const ProductDashboard = () => {
     <div className="w-full p-5">
       <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Products</p>
-        <ModalProduct />
+        <ModalProduct token={token} />
       </div>
       <div className="w-full">
         <table className="w-full table-auto">
@@ -49,7 +49,7 @@ const ProductDashboard = () => {
           </thead>
           <tbody>
             {products?.map((data, index) => (
-              <ListProduct products={data} key={index} />
+              <ListProduct products={data} key={index} token={token} />
             ))}
           </tbody>
         </table>
