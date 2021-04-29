@@ -17,8 +17,8 @@ const ProductDashboard = () => {
         },
       })
       .then((res) => {
+        const newSort = res.data?.data.sort((a, b) => b.id - a.id);
         setProducts(res.data.data);
-        console.log(res.data.data);
       })
       .catch((err) => {
         if (err.response) {
@@ -37,7 +37,7 @@ const ProductDashboard = () => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-white h-10 border-b text-center">
-              <th className="p-2"></th>
+              <th className="p-2">Id</th>
               <th className="p-2">Image</th>
               <th className="p-2 w-1/4 text-left">Name</th>
               <th className="p-2">Price</th>

@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+
 const ListProduct = (props) => {
   return (
     <tr className="text-center hover:bg-gray-200 bg-white">
@@ -8,11 +9,13 @@ const ListProduct = (props) => {
       </td>
       <td className="px-2 border-b border-grey-light">
         <div className="flex justify-center">
-          <Image
-            src={props.products.imageSrc || "/images/no-photos.png"}
-            width={64}
-            height={64}
-          />
+          <div className="flex justify-center w-16 h-16 rounded-full overflow-hidden">
+            <Image
+              src={props.products.imageSrc || "/images/no-photos.png"}
+              width={64}
+              height={64}
+            />
+          </div>
         </div>
       </td>
       <td className="py-4 px-2 border-b border-grey-light text-left">
