@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../../../../context/Dashboard.reducer";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import Modal from "react-modal";
@@ -24,6 +25,7 @@ const initialValues = {
 };
 
 const ModalStaff = () => {
+  const context = useContext(Context);
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
@@ -68,7 +70,7 @@ const ModalStaff = () => {
                 {/* fname + lname form */}
                 <div className="w-fulls mt-2 mb-5 text-center">
                   <p className="text-lg font-mono bg-red-300 rounded-full p-1">
-                    Shop Name
+                    {context.state.shopDetails?.shopName}
                   </p>
                 </div>
                 <div className="flex mb-5">

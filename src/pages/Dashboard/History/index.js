@@ -1,4 +1,5 @@
 import React from "react";
+import WithAuth from "../../../components/WithAuth";
 
 const HistoryDashboard = () => {
   return (
@@ -34,4 +35,4 @@ const HistoryDashboard = () => {
   );
 };
 
-export default HistoryDashboard;
+export default WithAuth(HistoryDashboard);

@@ -1,6 +1,7 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik } from "formik";
+import WithAuth from "../../../components/WithAuth";
 
 const InitialValues = {
   storename: "",
@@ -64,4 +65,4 @@ const SettingDashboard = () => {
   );
 };
 
-export default SettingDashboard;
+export default WithAuth(SettingDashboard);

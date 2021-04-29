@@ -1,47 +1,64 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Cookie from "js-cookie";
+import { axios } from "../../utils/api/shopping";
 import Router from "next/router";
 import LoadingComponent from "../Loading";
+import { Context } from "../../context/Dashboard.reducer";
+
 const WithAuth = (WrappedComponent) => {
-  return class extends React.Component {
-    static async getInitialProps(ctx) {
-      // Check if Page has a `getInitialProps`; if so, call it.
-      const pageProps =
-        WrappedComponent.getInitialProps &&
-        (await WrappedComponent.getInitialProps(ctx));
-      // Return props.
-      return { ...pageProps };
-    }
+  const Wrapper = (props) => {
+    const context = useContext(Context);
+    const [isLoading, setLoading] = useState(true);
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        isLoading: true,
-        isAuth: false,
-      };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
       const token = Cookie.get("token");
-      console.log(token);
-      if (token) {
-        this.setState({ isLoading: false });
-      } else {
-        setTimeout(() => {
-          Router.replace("/signin");
-        }, 2000);
-      }
-    }
 
-    render() {
-      const { isLoading, isAuth } = this.state;
-      if (isLoading) return <LoadingComponent />;
+      // Get profile
+      axios
+        .get("/auth/profile", { headers: { authorization: `Bearer ${token}` } })
+        .then((res) => {
+          console.log(res.data);
 
-      if (!isAuth) {
-      }
-      return <WrappedComponent {...this.props} />;
-    }
+          // Set in Context
+          context.ShopProfile({
+            shopId: res.data?.Shop?.id,
+            shopName: res.data?.Shop?.name,
+          });
+
+          // Set in LocalStorage
+          localStorage.setItem(
+            "shop",
+            JSON.stringify({
+              shopId: res.data?.Shop?.id,
+              shopName: res.data?.Shop?.name,
+            })
+          );
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          Cookie.remove("token");
+          setTimeout(() => {
+            Router.replace("/signin");
+          }, 2000);
+        });
+    }, []);
+
+    if (isLoading) return <LoadingComponent />;
+
+    return <WrappedComponent {...props} />;
   };
+
+  // Check Auth Server Side
+
+  Wrapper.getInitialProps = async (context) => {
+    const componentProps =
+      WrappedComponent.getInitialProps &&
+      (await WrappedComponent.getInitialProps(context));
+
+    return { ...componentProps };
+  };
+  return Wrapper;
 };
 
 export default WithAuth;

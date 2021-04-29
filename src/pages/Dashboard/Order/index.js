@@ -1,4 +1,5 @@
 import React from "react";
+import WithAuth from "../../../components/WithAuth";
 
 const OrderDashboard = () => {
   return (
@@ -37,4 +38,4 @@ const OrderDashboard = () => {
   );
 };
 
-export default OrderDashboard;
+export default WithAuth(OrderDashboard);

@@ -6,6 +6,7 @@ import ProductDashboard from "./Product";
 import SettingDashboard from "./Settings";
 import StaffDashboard from "./Staff";
 import MainDashboard from "./Dashboard";
+
 const DashboardComponentPage = () => {
   const context = useContext(Context);
 

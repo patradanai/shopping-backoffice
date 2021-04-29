@@ -3,6 +3,8 @@ import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
 import ModalProduct from "./ModalProduct";
 import ListProduct from "./ListProduct";
+import WithAuth from "../../../components/WithAuth";
+
 const ProductDashboard = () => {
   const [products, setProducts] = useState(null);
   const token = Cookie.get("token");
@@ -58,4 +60,4 @@ const ProductDashboard = () => {
   );
 };
 
-export default ProductDashboard;
+export default WithAuth(ProductDashboard);
