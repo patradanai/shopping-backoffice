@@ -32,7 +32,7 @@ const HistoryDashboard = () => {
       <div className="w-full">
         <table className="w-full table-auto">
           <thead>
-            <tr className="bg-white h-10">
+            <tr className="bg-white h-10 border-b text-center">
               <th>Id</th>
               <th>Date</th>
               <th>User</th>
@@ -41,11 +41,23 @@ const HistoryDashboard = () => {
               <th>Description</th>
             </tr>
           </thead>
-          <tbody>
-            {Logs?.map((data, index) => (
-              <ListLog logs={data} key={index} />
-            ))}
-          </tbody>
+          {Logs?.length > 0 ? (
+            <tbody>
+              {Logs?.map((data, index) => (
+                <ListLog logs={data} key={index} />
+              ))}
+            </tbody>
+          ) : (
+            <tbody>
+              <tr>
+                <td colSpan={6}>
+                  <div className="text-center mt-20 text-lg font-mono">
+                    There is nothing here.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </div>

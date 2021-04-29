@@ -46,11 +46,23 @@ const StaffDashboard = () => {
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {listStaff?.map((staff, index) => (
-              <ListStaff staff={staff} key={index} />
-            ))}
-          </tbody>
+          {listStaff?.length > 0 ? (
+            <tbody>
+              {listStaff?.map((staff, index) => (
+                <ListStaff staff={staff} key={index} />
+              ))}
+            </tbody>
+          ) : (
+            <tbody>
+              <tr>
+                <td colSpan={8}>
+                  <div className="text-center mt-20 text-lg font-mono">
+                    There is nothing here.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </div>

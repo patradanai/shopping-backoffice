@@ -53,11 +53,23 @@ const ProductDashboard = () => {
               <th className="p-2 w-1/4">Update Inventory</th>
             </tr>
           </thead>
-          <tbody>
-            {products?.map((data, index) => (
-              <ListProduct products={data} key={index} token={token} />
-            ))}
-          </tbody>
+          {products?.length > 0 ? (
+            <tbody>
+              {products?.map((data, index) => (
+                <ListProduct products={data} key={index} token={token} />
+              ))}
+            </tbody>
+          ) : (
+            <tbody>
+              <tr>
+                <td colSpan={8}>
+                  <div className="text-center mt-20 text-lg font-mono">
+                    There is nothing here.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </div>

@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import WithAuth from "../../../components/WithAuth";
+import { Context } from "../../../context/Dashboard.reducer";
+import Cookie from "js-cookie";
+import { axios } from "../../../utils/api/shopping";
 
 const OrderDashboard = () => {
   return (
@@ -23,6 +26,15 @@ const OrderDashboard = () => {
             </tr>
           </thead>
           <tbody></tbody>
+          <tbody>
+            <tr>
+              <td colSpan={6}>
+                <div className="text-center mt-20 text-lg font-mono">
+                  There is nothing here.
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>

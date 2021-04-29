@@ -17,11 +17,20 @@ const WithAuth = (WrappedComponent) => {
       axios
         .get("/auth/profile", { headers: { authorization: `Bearer ${token}` } })
         .then((res) => {
+          console.log(res.data);
           // Set in Context
           context.ShopProfile({
             shopId: res.data?.Shop?.id,
             shopName: res.data?.Shop?.name,
             isActive: res.data?.Shop?.isActive,
+          });
+
+          context.UserProfile({
+            email: res.data?.email,
+            fname: res.data?.fname,
+            lname: res.data?.lname,
+            role: res.data?.Roles?.role,
+            phone: res.data?.phone,
           });
 
           // Set in LocalStorage
