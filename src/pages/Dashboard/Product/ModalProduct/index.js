@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import Modal from "react-modal";
 import Thumbnail from "../../../../components/ThumbImage";
 import { axios } from "../../../../utils/api/shopping";
+import Toggle from "../../../../components/Toggle";
 
 const customStyles = {
   content: {
@@ -34,7 +35,14 @@ const initialValues = {
 
 const ModalProduct = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isToggle, setToggle] = useState(true);
   const [category, setCategory] = useState(null);
+
+  const handleToggle = (state) => {
+    console.log(state);
+    setToggle(state);
+  };
+
   const handleImageUpdate = (image, onUploadProgress) => {
     let fd = new FormData();
     fd.append("product", image);
@@ -207,13 +215,14 @@ const ModalProduct = () => {
 
                 {/* Price */}
                 <div className="mb-5 flex flex-col">
-                  <div className="flex">
+                  <div className="flex items-center">
                     <label
                       className="font-mono text-sm mb-1 mr-2"
                       htmlFor="price"
                     >
                       isActive :
                     </label>
+                    <Toggle state={isToggle} onChangeToggle={handleToggle} />
                   </div>
                   <p className="text-sm text-red-300">
                     {errors.price || touched.price ? errors.price : null}
