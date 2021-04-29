@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { axios } from "../src/utils/api/shopping";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import LoadingComponent from "../src/components/Loading";
+import LoadingButton from "../src/components/LoadingButton";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -13,14 +17,41 @@ const initiaValues = {
 };
 
 const SignUpPage = () => {
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(false);
+  const [showMessage, setShowMessage] = useState("");
+  const [backDrop, setBackDrop] = useState(false);
+
+  // Check Token
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+    setTimeout(() => {
+      if (token) {
+        setBackDrop(true);
+        setTimeout(() => {
+          router.replace("/dashboard");
+        }, 5000);
+      }
+    }, 500);
+  }, [isLogin]);
   return (
     <div className="bg-gray-300 flex w-full min-h-screen justify-center items-center">
+      {/* Loading */}
+      {backDrop ? (
+        <LoadingComponent message="Page will be redirect to Dashbord in 5 second " />
+      ) : null}
       <div
         className="bg-white px-20 py-14 rounded-md shadow"
         style={{ maxWidth: 620, width: "100%" }}
       >
         {/* Header Title */}
         <div className="font-mono text-3xl mb-10 text-center">Signup</div>
+        {showMessage ? (
+          <p className="mx-2 mb-3 p-2 text-black text-center h-10 bg-red-200 rounded">
+            {showMessage}
+          </p>
+        ) : null}
 
         {/* Form Validate */}
         <Formik
@@ -50,6 +81,8 @@ const SignUpPage = () => {
                   },
                   {}
                 );
+                setShowMessage("Signup Succuss");
+                setIsLogin(false);
               } catch (err) {
                 console.error(err.message);
               }
@@ -150,13 +183,13 @@ const SignUpPage = () => {
               </div>
 
               {/*  Button  */}
-              <div className="text-center">
+              <div className="flex justify-center">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-400 rounded py-2 text-white px-20 hover:bg-gray-200 hover:text-black"
+                  className="flex bg-blue-400 rounded py-2 text-white px-10 hover:bg-gray-200 hover:text-black space-x-3"
                 >
-                  Register
+                  {isLogin ? <LoadingButton /> : null} <p>Signup</p>
                 </button>
               </div>
               <div className="mt-10">
