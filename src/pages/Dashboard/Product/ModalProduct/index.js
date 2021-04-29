@@ -41,6 +41,7 @@ const handleImageUpdate = (image, onUploadProgress) => {
 
 const ModalProduct = ({ token }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [showMessage, setShowMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [isToggle, setToggle] = useState(true);
@@ -52,7 +53,7 @@ const ModalProduct = ({ token }) => {
     price: 0,
     quantity: 0,
     description: "",
-    category: 0,
+    category: "",
     isActive: isToggle || true,
     imageSrc: image || "",
     file: file || "",
@@ -107,6 +108,7 @@ const ModalProduct = ({ token }) => {
             onSubmit={(values, { setSubmitting }) => {
               setIsLoading(false);
               setTimeout(() => {
+                // Fetching New Product
                 axios
                   .post(
                     "/db_product/1/product",
@@ -116,7 +118,7 @@ const ModalProduct = ({ token }) => {
                       isActive: values.isActive,
                       imageSrc: values.imageSrc,
                       description: values.description,
-                      categoryId: values.description,
+                      categoryId: values.category,
                       quanlity: values.quantity,
                     },
                     {
@@ -131,7 +133,14 @@ const ModalProduct = ({ token }) => {
                     setIsLoading(true);
                   })
                   .catch((err) => {
-                    console.error(err.message);
+                    if (err.response) {
+                      setIsLoading(true);
+                      setShowMessage("Found Problem Try Again!!!!");
+                      console.log(
+                        err.response.status,
+                        err.response.data?.Error
+                      );
+                    }
                   });
               }, 300);
             }}
@@ -232,16 +241,18 @@ const ModalProduct = ({ token }) => {
                       Category :
                     </label>
                     <select
-                      id="category"
-                      name="catagory"
+                      name="category"
                       onChange={handleChange}
-                      value={values.id}
+                      value={values.category}
                     >
+                      <option value="" label="Select a Category" />
                       {category.map((payload, index) => {
                         return (
-                          <option value={payload.id} key={index}>
-                            {payload.name}
-                          </option>
+                          <option
+                            value={parseInt(payload.id)}
+                            key={index}
+                            label={payload.name}
+                          />
                         );
                       })}
                     </select>
@@ -289,6 +300,11 @@ const ModalProduct = ({ token }) => {
                       : null}
                   </p>
                 </div>
+
+                {/* Show Message */}
+                {showMessage ? (
+                  <p className="text-sm text-red-300">{showMessage}</p>
+                ) : null}
 
                 {/* Button */}
                 {isLoading ? (
