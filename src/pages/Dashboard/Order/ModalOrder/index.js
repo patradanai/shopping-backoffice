@@ -109,7 +109,7 @@ const ModalOrder = (props) => {
                         >
                           <option value="">Select Status</option>
                           {props.orderStatus?.map((data, index) => (
-                            <option value={data.name} key={index}>
+                            <option value={data.id} key={index}>
                               {data.name}
                             </option>
                           ))}

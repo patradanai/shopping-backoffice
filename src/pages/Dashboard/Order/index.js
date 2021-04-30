@@ -35,15 +35,16 @@ const OrderDashboard = () => {
       setFetchStatus(false);
       axios
         .put(
-          `/db_order/${context.state.shopDetails.shopId}/edit/${orderId}`,
-          { status: status, tracking: tracking },
+          `/db_order/${context.state.shopDetails.shopId}/order/${orderId}/edit`,
+          { statusId: status, tracking: tracking },
           { headers: { authorization: `Bearer ${token}` } }
         )
         .then(() => {
           isModal(false);
           setFetchStatus(true);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           setFetchStatus(true);
         });
     }
