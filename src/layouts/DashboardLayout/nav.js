@@ -38,7 +38,7 @@ const Navbar = () => {
         <ul className="flex space-x-3 items-center">
           <li className="">
             <div className="flex items-center hover:bg-blue-300 px-2 py-1 hover:text-white cursor-pointer">
-              {context.state.userProfiles ? (
+              {context.state.userProfiles.fname ? (
                 <>
                   <div className="w-10 h-10 rounded-full overflow-hidden mr-2">
                     <Image src={"/images/avatar.png"} width={64} height={64} />

@@ -5,6 +5,7 @@ import Cookie from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
 import Pagination from "../../../components/Pagination";
 import ModalOrder from "./ModalOrder";
+
 const OrderDashboard = () => {
   const [page, setPage] = useState(1);
 
