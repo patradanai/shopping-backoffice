@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import WithAuth from "../../../components/WithAuth";
 import { Context } from "../../../context/Dashboard.reducer";
-import Cookie from "js-cookie";
+import Cookie, { set } from "js-cookie";
 import { axios } from "../../../utils/api/shopping";
 import Pagination from "../../../components/Pagination";
 import ModalOrder from "./ModalOrder";
 import ListOrder from "./ListOrder";
 
 const OrderDashboard = () => {
+  const [fetchStatus, setFetchStatus] = useState(true);
   const [order, setOrder] = useState(null);
+  const [orderStatus, setOrderStatus] = useState(null);
   const [isModal, setIsModal] = useState(false);
   const [orderClick, setOrderClick] = useState(null);
   const context = useContext(Context);
@@ -27,19 +29,52 @@ const OrderDashboard = () => {
     setIsModal(false);
   };
 
+  const fetchOrderStatus = ({ orderId, status, tracking }) => {
+    const token = Cookie.get("token");
+    if (context.state.shopDetails.shopId) {
+      setFetchStatus(false);
+      axios
+        .put(
+          `/db_order/${context.state.shopDetails.shopId}/edit/${orderId}`,
+          { status: status, tracking: tracking },
+          { headers: { authorization: `Bearer ${token}` } }
+        )
+        .then(() => {
+          isModal(false);
+          setFetchStatus(true);
+        })
+        .catch(() => {
+          setFetchStatus(true);
+        });
+    }
+  };
+
   useEffect(() => {
     const token = Cookie.get("token");
-    axios
-      .get(`/db_order/${context.state.shopDetails.shopId}/orders`, {
-        headers: { authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setOrder(res.data?.order);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    if (context.state.shopDetails.shopId) {
+      axios
+        .get(`/db_order/${context.state.shopDetails.shopId}/orders`, {
+          headers: { authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setOrder(res.data?.order);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      axios
+        .get("/db_order/statusOrder", {
+          headers: { authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setOrderStatus(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
   }, []);
 
   return (
@@ -50,6 +85,8 @@ const OrderDashboard = () => {
           order={orderClick}
           isModal={isModal}
           onModal={onChangeModal}
+          orderStatus={orderStatus}
+          fetchStatus={fetchOrderStatus}
         />
       </div>
       <div className="w-full">

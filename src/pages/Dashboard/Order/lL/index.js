@@ -3,9 +3,9 @@ import Image from "next/image";
 
 const ListProduct = (props) => {
   return (
-    <div className="flex h-full py-1 bg-white border items-center justify-between px-5">
+    <div className="flex h-14 py-1 bg-white border items-center justify-between px-5">
       <div>{props.id}</div>
-      <div>
+      <div className="flex items-center justify-center">
         <Image
           src={props.product?.imageSrc || "/images/avatar.png"}
           width={40}
