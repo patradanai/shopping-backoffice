@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import Image from "next/image";
+import ListProduct from "../ListProduct";
+
 const customStyles = {
   content: {
     top: "50%",
@@ -13,17 +14,10 @@ const customStyles = {
   },
 };
 
-const ModalOrder = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const ModalOrder = (props) => {
   return (
     <div>
-      <button
-        className="bg-red-300 rounded px-3 py-1 text-white"
-        onClick={() => setIsOpen(true)}
-      >
-        Add Order
-      </button>
-      <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
+      <Modal isOpen={props.isModal} style={customStyles} ariaHideApp={false}>
         <div style={{ width: 620 }}>
           {/* Header form */}
           <div className="bg-blue-300 h-10 p-2 text-center">
@@ -45,15 +39,7 @@ const ModalOrder = () => {
             {/* Items */}
             <div>
               <p className="font-mono">Products</p>
-              <div className="flex h-full py-1 bg-white border items-center justify-between px-5">
-                <div>1</div>
-                <div>
-                  <Image src={"/images/avatar.png"} width={40} height={40} />
-                </div>
-                <div>Pad Thai Chicken</div>
-                <div>1x</div>
-                <div>500</div>
-              </div>
+              <ListProduct />
             </div>
             {/* Total */}
             <div>
@@ -70,14 +56,14 @@ const ModalOrder = () => {
             <div className="text-center space-x-3 my-5">
               <button
                 type="submit"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={props.onModal}
                 className="bg-blue-300 py-2 rounded text-white px-10 hover:bg-gray-300"
               >
                 Save
               </button>
               <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={props.onModal}
                 className="bg-red-300 py-2 rounded text-white px-10 hover:bg-gray-300"
               >
                 Cancel
