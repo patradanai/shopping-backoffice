@@ -27,7 +27,9 @@ const ModalOrder = (props) => {
             {/* Name */}
             <div>
               <p className="font-mono text-sm">Name</p>
-              <p>Patradanai Nakpimay</p>
+              <p className="uppercase">
+                {props.order?.User?.fname + " " + props.order?.User?.lname}
+              </p>
             </div>
 
             {/* Shipping */}
@@ -39,7 +41,9 @@ const ModalOrder = (props) => {
             {/* Items */}
             <div>
               <p className="font-mono">Products</p>
-              <ListProduct />
+              {props.order?.Products?.map((data, index) => (
+                <ListProduct product={data} key={index} id={index} />
+              ))}
             </div>
             {/* Total */}
             <div>

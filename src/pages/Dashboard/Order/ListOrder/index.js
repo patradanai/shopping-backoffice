@@ -4,7 +4,7 @@ import moment from "moment";
 const ListOrder = (props) => {
   return (
     <tr
-      className="bg-white text-center"
+      className="bg-white text-center hover:bg-blue-400 cursor-pointer"
       onClick={() => props.handleClick(props.order)}
     >
       <td className="py-4 px-2 border-b">{props.order.id}</td>
