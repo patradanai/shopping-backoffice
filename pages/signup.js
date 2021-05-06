@@ -24,17 +24,18 @@ const SignUpPage = () => {
 
   // Check Token
   useEffect(() => {
-    const token = Cookies.get("token");
-
     setTimeout(() => {
-      if (token) {
-        setBackDrop(true);
-        setTimeout(() => {
-          router.replace("/dashboard");
-        }, 5000);
-      }
+      setBackDrop(true);
+      setTimeout(() => {
+        router.replace("/signin");
+      }, 5000);
     }, 500);
-  }, [isLogin]);
+  }, [showMessage]);
+
+  if (showMessage) {
+    return <Completed />;
+  }
+
   return (
     <div className="bg-gray-300 flex w-full min-h-screen justify-center items-center">
       {/* Loading */}
@@ -211,3 +212,21 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
+const Completed = () => {
+  return (
+    <div className="bg-gray-300 flex w-full min-h-screen justify-center items-center">
+      <div
+        className="bg-white px-20 py-14 rounded-md shadow"
+        style={{ maxWidth: 620, width: "100%" }}
+      >
+        {/* Header Title */}
+        <div className="font-mono text-3xl mb-10 text-center">
+          Thank you for Register
+        </div>
+
+        <div className="text-sm">Don't close, will be redirect in 5 second</div>
+      </div>
+    </div>
+  );
+};
