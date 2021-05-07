@@ -228,7 +228,9 @@ const Completed = () => {
           Thank you for Register
         </div>
 
-        <div className="text-sm">Don't close, will be redirect in 5 second</div>
+        <div className="text-sm text-center">
+          Don't close, will be redirect in 5 second
+        </div>
       </div>
     </div>
   );

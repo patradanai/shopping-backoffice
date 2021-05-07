@@ -19,13 +19,11 @@ const SideBar = () => {
     return "h-10 flex items-center hover:bg-gray-200 hover:bg-opacity-40 rounded px-2 cursor-pointer";
   };
 
-  const { role } = context.state.userProfiles;
-
   return (
     <div className="w-1/4 py-5 px-5 shadow" style={{ background: "#43379c" }}>
       <div className="text-xl flex items-center">
         <ShopIcon className="w-10 h-10 text-gray-400" />
-        <p className="text-white font-sans ml-2 font-semibold ">E-Commerce</p>
+        <p className="text-white font-sans ml-2 font-semibold ">E-Shopping</p>
       </div>
       <div className="bg-white rounded-full h-12 mt-5 p-3 text-center font-mono">
         {context.state.shopDetails.shopName}
@@ -39,7 +37,7 @@ const SideBar = () => {
             <HomeIcon className="w-6 h-6 text-gray-400 mr-2" />
             Dashboard
           </li>
-          {role === "Administrator" ? (
+          {context.state.userProfiles?.role === "Administrator" ? (
             <li
               className={
                 context.state.DashboardPage == 1 ? Active() : Inactive()
@@ -64,7 +62,7 @@ const SideBar = () => {
             <OrderIcon className="w-6 h-6 text-gray-400 mr-2" />
             Orders
           </li>
-          {role === "Administrator" ? (
+          {context.state.userProfiles?.role === "Administrator" ? (
             <li
               className={
                 context.state.DashboardPage == 4 ? Active() : Inactive()
@@ -75,13 +73,17 @@ const SideBar = () => {
               Logs
             </li>
           ) : null}
-          <li
-            className={context.state.DashboardPage == 5 ? Active() : Inactive()}
-            onClick={() => context.DashPageFunc(5)}
-          >
-            <SettingIcon className="w-6 h-6 text-gray-400 mr-2" />
-            Settings
-          </li>
+          {context.state.userProfiles?.role === "Administrator" ? (
+            <li
+              className={
+                context.state.DashboardPage == 5 ? Active() : Inactive()
+              }
+              onClick={() => context.DashPageFunc(5)}
+            >
+              <SettingIcon className="w-6 h-6 text-gray-400 mr-2" />
+              Settings
+            </li>
+          ) : null}
         </ul>
       </div>
     </div>

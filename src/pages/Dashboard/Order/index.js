@@ -6,6 +6,7 @@ import { axios } from "../../../utils/api/shopping";
 import Pagination from "../../../components/Pagination";
 import ModalOrder from "./ModalOrder";
 import ListOrder from "./ListOrder";
+import RefreshIcon from "../../../components/icons/Refresh";
 
 const OrderDashboard = () => {
   const [fetchStatus, setFetchStatus] = useState(true);
@@ -60,7 +61,6 @@ const OrderDashboard = () => {
         })
         .then((res) => {
           setOrder(res.data?.order);
-          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -89,6 +89,12 @@ const OrderDashboard = () => {
           orderStatus={orderStatus}
           fetchStatus={fetchOrderStatus}
         />
+        <div className="flex-grow flex items-center">
+          <button className="ml-auto  p-2 bg-white shadow-md border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400">
+            <RefreshIcon className="w-6 h-6" />
+            <p>Refresh</p>
+          </button>
+        </div>
       </div>
       <div className="w-full">
         <table className="w-full table-auto">

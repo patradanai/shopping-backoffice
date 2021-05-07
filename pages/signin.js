@@ -7,6 +7,7 @@ import LoadingButton from "../src/components/LoadingButton";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import _ from "lodash";
 
 const initiaValues = {
   email: "",
@@ -66,17 +67,29 @@ const SignInPage = () => {
                 const res = await axios.post(
                   "/auth/signin",
                   { username: values.email, password: values.password },
-                  {}
+                  {},
+                  { validateStatus: false }
                 );
+
                 if ((res.status = 200)) {
-                  console.log(res.data);
-                  const token = res.data.token;
-                  Cookies.set("token", token, { expires: 1 });
-                  setShowMessage("Welcome to E-Commerce");
-                  setIsLogin(false);
+                  if (
+                    _.includes(
+                      ["ROLE_STAFF", "ROLE_ADMINISTRATOR"],
+                      res.data?.role[0]
+                    )
+                  ) {
+                    const token = res.data?.token;
+                    Cookies.set("token", token, { expires: 1 });
+                    setShowMessage("Welcome to E-Commerce");
+                  } else {
+                    setShowMessage("You don't have authority");
+                  }
                 }
+                setIsLogin(false);
               } catch (err) {
                 console.error(err.message);
+                setShowMessage("Found problem please try again");
+                setIsLogin(false);
               }
 
               setSubmitting(false);

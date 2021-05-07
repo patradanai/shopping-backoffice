@@ -28,7 +28,7 @@ const initialValues = {
   phone: "",
 };
 
-const ModalStaff = () => {
+const ModalStaff = (props) => {
   const context = useContext(Context);
   const [isOpen, setIsOpen] = useState(false);
   const [showMessage, setShowMessage] = useState("");
@@ -83,6 +83,7 @@ const ModalStaff = () => {
                     }
                   )
                   .then((res) => {
+                    props.onCompleted();
                     setSubmitting(false);
                     setIsOpen(false);
                     setIsLoading(true);

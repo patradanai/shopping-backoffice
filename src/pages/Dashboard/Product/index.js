@@ -6,6 +6,7 @@ import ModalProduct from "./ModalProduct";
 import ListProduct from "./ListProduct";
 import WithAuth from "../../../components/WithAuth";
 import Pagination from "../../../components/Pagination";
+import RefreshIcon from "../../../components/icons/Refresh";
 
 const ProductDashboard = () => {
   const context = useContext(Context);
@@ -45,6 +46,12 @@ const ProductDashboard = () => {
       <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Products</p>
         <ModalProduct token={token} />
+        <div className="flex-grow flex items-center">
+          <button className="ml-auto bg-white shadow-md p-2  border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400">
+            <RefreshIcon className="w-6 h-6" />
+            <p>Refresh</p>
+          </button>
+        </div>
       </div>
       <div className="w-full">
         <table className="w-full table-auto">
