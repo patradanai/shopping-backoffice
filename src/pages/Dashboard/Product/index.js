@@ -7,8 +7,11 @@ import ListProduct from "./ListProduct";
 import WithAuth from "../../../components/WithAuth";
 import Pagination from "../../../components/Pagination";
 import RefreshIcon from "../../../components/icons/Refresh";
+import Loading from "../../../components/Loading";
 
 const ProductDashboard = () => {
+  const [isLoading, setIsloading] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const context = useContext(Context);
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState(null);
@@ -18,36 +21,55 @@ const ProductDashboard = () => {
     setPage(payload);
   };
 
+  const onChangeModal = () => {};
+
   /**
    *  Fetch all shop's product
    */
-  useEffect(() => {
+  const fetchProducts = () => {
     if (context.state.shopDetails?.shopId) {
-      axios
-        .get(`/db_product/${context.state.shopDetails?.shopId}/products`, {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const newSort = res.data?.data.sort((a, b) => b.id - a.id);
-          setProducts(res.data.data);
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.status, err.response.data?.Error);
-          }
-        });
+      setIsloading(true);
+      setTimeout(() => {
+        axios
+          .get(`/db_product/${context.state.shopDetails?.shopId}/products`, {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            const newSort = res.data?.data.sort((a, b) => b.id - a.id);
+            setProducts(res.data.data);
+          })
+          .then(() => {
+            setIsloading(false);
+          })
+          .catch((err) => {
+            setIsloading(false);
+            if (err.response) {
+              console.log(err.response.status, err.response.data?.Error);
+            }
+          });
+      }, 500);
     }
-  }, []);
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, [context.state.shopDetails?.shopId]);
 
   return (
     <div className="w-full p-5">
+      {/* Loading */}
+      {isLoading ? <Loading /> : null}
+
+      {/* Header Title */}
       <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Products</p>
-        <ModalProduct token={token} />
+        <ModalProduct token={token} onCompleted={() => fetchProducts()} />
         <div className="flex-grow flex items-center">
-          <button className="ml-auto bg-white shadow-md p-2  border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400">
+          <button
+            className="ml-auto bg-white shadow-md p-2  border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400"
+            onClick={() => fetchProducts()}
+          >
             <RefreshIcon className="w-6 h-6" />
             <p>Refresh</p>
           </button>

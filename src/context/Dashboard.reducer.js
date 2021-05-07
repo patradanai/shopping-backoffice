@@ -1,11 +1,22 @@
-import { PAGE_STATE, SHOP_PROFILE, USER_PROFILE } from "./Dashboard.action";
+import {
+  PAGE_STATE,
+  SHOP_PROFILE,
+  USER_PROFILE,
+  LOADING,
+} from "./Dashboard.action";
 import createContext from "./createContext";
-import { DashPageFunc, ShopProfile, UserProfile } from "./Dashboard.action";
+import {
+  DashPageFunc,
+  ShopProfile,
+  UserProfile,
+  setLoading,
+} from "./Dashboard.action";
 
 const initialStore = {
-  DashboardPage: 0,
+  DashboardPage: 1,
   shopDetails: {},
   userProfiles: {},
+  loading: false,
 };
 
 const reducer = (state, action) => {
@@ -16,6 +27,8 @@ const reducer = (state, action) => {
       return { ...state, shopDetails: action.payload };
     case USER_PROFILE:
       return { ...state, userProfiles: action.payload };
+    case LOADING:
+      return { ...state, loading: action.payload };
     default:
       return state;
   }
@@ -23,6 +36,6 @@ const reducer = (state, action) => {
 
 export const { Context, Provider } = createContext(
   reducer,
-  { DashPageFunc, ShopProfile, UserProfile },
+  { DashPageFunc, ShopProfile, UserProfile, setLoading },
   initialStore
 );

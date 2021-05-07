@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Toggle from "../../../../components/Toggle";
 const ListStaff = (props) => {
   return (
     <tr className="text-center hover:bg-gray-200 bg-white">
@@ -17,11 +18,7 @@ const ListStaff = (props) => {
       <td className="text-left py-4 px-2 border-b">{props.staff.email}</td>
       <td className="py-4 px-2 border-b">{props.staff.phone}</td>
       <td className="py-4 px-2 border-b">
-        {props.staff.isActive ? (
-          <p className="text-green-500">Active</p>
-        ) : (
-          <p className="text-red-400">Inactive</p>
-        )}
+        <Toggle state={props.staff?.isActive} onChangeToggle={props.onToggle} />
       </td>
     </tr>
   );

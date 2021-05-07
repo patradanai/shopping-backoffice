@@ -19,6 +19,10 @@ const StaffDashboard = () => {
     setPage(payload);
   };
 
+  const onChangeToggle = (e) => {
+    console.log(e);
+  };
+
   // Fetching Member in Shop
   const fetchingMember = () => {
     const token = Cookie.get("token");
@@ -87,7 +91,11 @@ const StaffDashboard = () => {
           {listStaff?.length > 0 ? (
             <tbody>
               {listStaff?.map((staff, index) => (
-                <ListStaff staff={staff} key={index} />
+                <ListStaff
+                  staff={staff}
+                  key={index}
+                  onToggle={onChangeToggle}
+                />
               ))}
             </tbody>
           ) : (

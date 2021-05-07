@@ -4,7 +4,7 @@ import { axios } from "../../utils/api/shopping";
 import Router from "next/router";
 import LoadingComponent from "../Loading";
 import { Context } from "../../context/Dashboard.reducer";
-
+import _ from "lodash";
 const WithAuth = (WrappedComponent) => {
   const Wrapper = (props) => {
     const context = useContext(Context);
@@ -17,7 +17,12 @@ const WithAuth = (WrappedComponent) => {
       axios
         .get("/auth/profile", { headers: { authorization: `Bearer ${token}` } })
         .then((res) => {
-          console.log(res.data);
+          if (_.includes(["ROLE_CUSTOMER"], res.data?.Roles[0]?.role)) {
+            setTimeout(() => {
+              Router.replace("/signin");
+            }, 2000);
+            return;
+          }
           // Set in Context
           context.ShopProfile({
             shopId: res.data?.Shop?.id,
@@ -54,7 +59,7 @@ const WithAuth = (WrappedComponent) => {
         });
     }, []);
 
-    if (isLoading) return <LoadingComponent />;
+    // if (isLoading) return <LoadingComponent />;
 
     return <WrappedComponent {...props} />;
   };

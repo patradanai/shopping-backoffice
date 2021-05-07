@@ -30,13 +30,13 @@ const SideBar = () => {
       </div>
       <div className="text-white mt-5">
         <ul>
-          <li
+          {/* <li
             className={context.state.DashboardPage == 0 ? Active() : Inactive()}
             onClick={() => context.DashPageFunc(0)}
           >
             <HomeIcon className="w-6 h-6 text-gray-400 mr-2" />
             Dashboard
-          </li>
+          </li> */}
           {context.state.userProfiles?.role === "Administrator" ? (
             <li
               className={

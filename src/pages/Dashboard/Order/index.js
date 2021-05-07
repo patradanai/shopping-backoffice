@@ -7,8 +7,10 @@ import Pagination from "../../../components/Pagination";
 import ModalOrder from "./ModalOrder";
 import ListOrder from "./ListOrder";
 import RefreshIcon from "../../../components/icons/Refresh";
+import Loading from "../../../components/Loading/";
 
 const OrderDashboard = () => {
+  const [isLoading, setIsloading] = useState(false);
   const [fetchStatus, setFetchStatus] = useState(true);
   const [order, setOrder] = useState(null);
   const [orderStatus, setOrderStatus] = useState(null);
@@ -30,7 +32,8 @@ const OrderDashboard = () => {
     setIsModal(false);
   };
 
-  const fetchOrderStatus = ({ orderId, status, tracking }) => {
+  // Fetch OrderStatus
+  const postOrderStatus = ({ orderId, status, tracking }) => {
     const token = Cookie.get("token");
     if (context.state.shopDetails.shopId) {
       setFetchStatus(false);
@@ -43,6 +46,8 @@ const OrderDashboard = () => {
         .then(() => {
           isModal(false);
           setFetchStatus(true);
+          // fetching Order
+          fetchOrder();
         })
         .catch((err) => {
           console.log(err);
@@ -51,35 +56,51 @@ const OrderDashboard = () => {
     }
   };
 
-  useEffect(() => {
+  // Fetch Order //
+  const fetchOrder = () => {
     const token = Cookie.get("token");
 
-    if (context.state.shopDetails.shopId) {
-      axios
-        .get(`/db_order/${context.state.shopDetails.shopId}/orders`, {
-          headers: { authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          setOrder(res.data?.order);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      axios
-        .get("/db_order/statusOrder", {
-          headers: { authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          console.log(res.data);
-          setOrderStatus(res.data);
-        })
-        .catch((err) => console.log(err));
+    if (context.state.shopDetails?.shopId) {
+      setIsloading(true);
+      setTimeout(() => {
+        axios
+          .get(`/db_order/${context.state.shopDetails.shopId}/orders`, {
+            headers: { authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setOrder(res.data?.order);
+            axios
+              .get("/db_order/statusOrder", {
+                headers: { authorization: `Bearer ${token}` },
+              })
+              .then((res) => {
+                setOrderStatus(res.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .then(() => {
+            setIsloading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsloading(false);
+          });
+      }, 500);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchOrder();
+  }, [context.state.shopDetails?.shopId]);
 
   return (
     <div className="w-full p-5">
+      {/* Loading */}
+      {isLoading ? <Loading /> : null}
+
+      {/* Header Title */}
       <div className="flex space-x-3 mb-5">
         <p className="text-3xl font-serif">Orders</p>
         <ModalOrder
@@ -87,10 +108,13 @@ const OrderDashboard = () => {
           isModal={isModal}
           onModal={onChangeModal}
           orderStatus={orderStatus}
-          fetchStatus={fetchOrderStatus}
+          fetchStatus={postOrderStatus}
         />
         <div className="flex-grow flex items-center">
-          <button className="ml-auto  p-2 bg-white shadow-md border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400">
+          <button
+            className="ml-auto  p-2 bg-white shadow-md border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400"
+            onClick={() => fetchOrder()}
+          >
             <RefreshIcon className="w-6 h-6" />
             <p>Refresh</p>
           </button>
@@ -128,6 +152,8 @@ const OrderDashboard = () => {
           )}
         </table>
       </div>
+
+      {/* Pagination */}
       <div className="flex  w-full justify-between  mt-1">
         <p>Showing 1 of 1 of 1 entries</p>
         <Pagination

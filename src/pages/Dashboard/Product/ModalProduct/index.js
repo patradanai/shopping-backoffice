@@ -40,7 +40,7 @@ const handleImageUpdate = (image, onUploadProgress) => {
   }
 };
 
-const ModalProduct = ({ token }) => {
+const ModalProduct = ({ token, onCompleted }) => {
   const context = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
   const [showMessage, setShowMessage] = useState("");
@@ -136,6 +136,9 @@ const ModalProduct = ({ token }) => {
                     setSubmitting(false);
                     setIsOpen(false);
                     setIsLoading(true);
+
+                    // Props Oncompleted
+                    onCompleted();
                   })
                   .catch((err) => {
                     if (err.response) {
