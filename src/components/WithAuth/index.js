@@ -17,7 +17,6 @@ const WithAuth = (WrappedComponent) => {
       axios
         .get("/auth/profile", { headers: { authorization: `Bearer ${token}` } })
         .then((res) => {
-          console.log(res.data);
           // Set in Context
           context.ShopProfile({
             shopId: res.data?.Shop?.id,

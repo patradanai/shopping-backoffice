@@ -39,7 +39,7 @@ const SideBar = () => {
             <HomeIcon className="w-6 h-6 text-gray-400 mr-2" />
             Dashboard
           </li>
-          {role !== "Administrator" ? (
+          {role === "Administrator" ? (
             <li
               className={
                 context.state.DashboardPage == 1 ? Active() : Inactive()
@@ -64,7 +64,7 @@ const SideBar = () => {
             <OrderIcon className="w-6 h-6 text-gray-400 mr-2" />
             Orders
           </li>
-          {role !== "Administrator" ? (
+          {role === "Administrator" ? (
             <li
               className={
                 context.state.DashboardPage == 4 ? Active() : Inactive()

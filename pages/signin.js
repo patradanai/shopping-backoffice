@@ -69,6 +69,7 @@ const SignInPage = () => {
                   {}
                 );
                 if ((res.status = 200)) {
+                  console.log(res.data);
                   const token = res.data.token;
                   Cookies.set("token", token, { expires: 1 });
                   setShowMessage("Welcome to E-Commerce");

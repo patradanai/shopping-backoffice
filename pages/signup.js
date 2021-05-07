@@ -24,12 +24,15 @@ const SignUpPage = () => {
 
   // Check Token
   useEffect(() => {
-    setTimeout(() => {
-      setBackDrop(true);
+    if (showMessage) {
       setTimeout(() => {
-        router.replace("/signin");
-      }, 5000);
-    }, 500);
+        setBackDrop(true);
+        setTimeout(() => {
+          router.replace("/signin");
+          setBackDrop(false);
+        }, 5000);
+      }, 500);
+    }
   }, [showMessage]);
 
   if (showMessage) {
@@ -194,8 +197,8 @@ const SignUpPage = () => {
                 </button>
               </div>
               <div className="mt-10">
-                <p className="text-sm">
-                  If you already have a member!{" "}
+                <p className="text-sm text-center">
+                  If you already have a member!
                   <Link href="/signin">
                     <span className="text-gray-500 underline cursor-pointer">
                       Go to Signin
