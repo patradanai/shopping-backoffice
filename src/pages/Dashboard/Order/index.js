@@ -33,18 +33,18 @@ const OrderDashboard = () => {
   };
 
   // Fetch OrderStatus
-  const postOrderStatus = ({ orderId, status, tracking }) => {
+  const postOrderStatus = ({ orderId, status, tracking, statusName }) => {
     const token = Cookie.get("token");
     if (context.state.shopDetails.shopId) {
       setFetchStatus(false);
       axios
         .put(
-          `/db_order/${context.state.shopDetails.shopId}/order/${orderId}/edit`,
-          { statusId: status, tracking: tracking },
+          `/db_order/${context.state.shopDetails?.shopId}/order/${orderId}/edit`,
+          { statusId: status, tracking: tracking, status: statusName },
           { headers: { authorization: `Bearer ${token}` } }
         )
         .then(() => {
-          isModal(false);
+          setIsModal(false);
           setFetchStatus(true);
           // fetching Order
           fetchOrder();
@@ -106,9 +106,9 @@ const OrderDashboard = () => {
         <ModalOrder
           order={orderClick}
           isModal={isModal}
-          onModal={onChangeModal}
+          onModal={() => onChangeModal()}
           orderStatus={orderStatus}
-          fetchStatus={postOrderStatus}
+          fetchStatus={(e) => postOrderStatus(e)}
         />
         <div className="flex-grow flex items-center">
           <button
