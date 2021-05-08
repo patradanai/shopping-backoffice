@@ -14,18 +14,36 @@ const StaffDashboard = () => {
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [listStaff, setListStaff] = useState(null);
+  const token = Cookie.get("token");
 
   const onChangePage = (payload) => {
     setPage(payload);
   };
 
-  const onChangeToggle = (e) => {
-    console.log(e);
+  // Onchange Toggle
+  const onChangeToggle = (e, userId) => {
+    axios
+      .put(
+        `/auth/profile/active/${userId}`,
+        {
+          isActive: e,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        fetchingMember();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // Fetching Member in Shop
   const fetchingMember = () => {
-    const token = Cookie.get("token");
     if (token && context.state.shopDetails?.shopId) {
       setLoading(true);
       setTimeout(() => {
