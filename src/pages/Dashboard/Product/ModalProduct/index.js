@@ -40,25 +40,31 @@ const handleImageUpdate = (image, onUploadProgress) => {
   }
 };
 
-const ModalProduct = ({ token, onCompleted }) => {
+const ModalProduct = ({
+  token,
+  onCompleted,
+  stateModal,
+  onChangeModal,
+  onClickProduct,
+  product,
+}) => {
   const context = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
   const [showMessage, setShowMessage] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState(null);
-  const [isToggle, setToggle] = useState(true);
+  const [isToggle, setToggle] = useState(false);
   const [category, setCategory] = useState(null);
   const [image, setImage] = useState(null);
 
   const initialValues = {
-    name: "",
-    price: 0,
+    name: product?.name || "",
+    price: product?.price || 0,
     quantity: 0,
-    description: "",
-    category: "",
+    description: product?.description || "",
+    category: product?.Category?.id || "",
     isActive: isToggle || true,
-    imageSrc: image || "",
-    file: file || "",
+    imageSrc: image ? image : product?.imageSrc || "",
+    file: file || 0,
   };
 
   const handleToggle = (state) => {
@@ -71,20 +77,28 @@ const ModalProduct = ({ token, onCompleted }) => {
     });
   }, []);
 
+  useEffect(() => {
+    setToggle(product?.isActive);
+  }, [product?.isActive]);
+
   return (
     <div>
+      {/* Button Trigger Modal */}
       <button
         className="bg-red-300 rounded px-3 py-1 text-white"
-        onClick={() => setIsOpen(true)}
+        onClick={() => onClickProduct()}
       >
         Add Product
       </button>
-      <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
+      {/* Modal  */}
+      <Modal isOpen={stateModal} style={customStyles} ariaHideApp={false}>
         <div style={{ width: 620 }}>
           {/* Header form */}
           <div className="bg-blue-300 h-10 p-2 text-center">
             <p className="text-white font-mono">Add Product</p>
           </div>
+
+          {/* Form Validate */}
           <Formik
             enableReinitialize={true}
             initialValues={initialValues}
@@ -96,15 +110,18 @@ const ModalProduct = ({ token, onCompleted }) => {
                 .required("Price is required"),
               description: Yup.string().required("Description is required"),
               file: Yup.mixed()
+                .nullable()
+                .notRequired()
                 .test(
-                  "fileSize",
-                  "File too large",
-                  (value) => value && value.size <= FILE_SIZE
+                  "FILE_SIZE",
+                  "Uploaded file is too big.",
+                  (value) => !value || (value && value.size <= FILE_SIZE)
                 )
                 .test(
-                  "fileFormat",
-                  "Unsupported Format",
-                  (value) => value && SUPPORTED_FORMATS.includes(value.type)
+                  "FILE_FORMAT",
+                  "Uploaded file has unsupported format.",
+                  (value) =>
+                    !value || (value && SUPPORTED_FORMATS.includes(value.type))
                 ),
             })}
             onSubmit={(values, { setSubmitting }) => {
@@ -114,42 +131,82 @@ const ModalProduct = ({ token, onCompleted }) => {
                 if (!context.state.shopDetails?.shopId) {
                   return;
                 }
-                axios
-                  .post(
-                    `/db_product/${context.state.shopDetails?.shopId}/product`,
-                    {
-                      name: values.name,
-                      price: values.price,
-                      isActive: values.isActive,
-                      imageSrc: values.imageSrc,
-                      description: values.description,
-                      categoryId: values.category,
-                      quanlity: values.quantity,
-                    },
-                    {
-                      headers: {
-                        authorization: `Bearer ${token}`,
+                if (product) {
+                  axios
+                    .put(
+                      `/db_product/product/${product?.id}/edit`,
+                      {
+                        name: values.name,
+                        price: values.price,
+                        isActive: values.isActive,
+                        imageSrc: values.imageSrc,
+                        description: values.description,
+                        categoryId: values.category,
+                        quanlity: values.quantity,
                       },
-                    }
-                  )
-                  .then((res) => {
-                    setSubmitting(false);
-                    setIsOpen(false);
-                    setIsLoading(true);
-
-                    // Props Oncompleted
-                    onCompleted();
-                  })
-                  .catch((err) => {
-                    if (err.response) {
+                      {
+                        headers: {
+                          authorization: `Bearer ${token}`,
+                        },
+                      }
+                    )
+                    .then((res) => {
+                      setSubmitting(false);
+                      onChangeModal(stateModal);
                       setIsLoading(true);
-                      setShowMessage("Found Problem Try Again!!!!");
-                      console.log(
-                        err.response.status,
-                        err.response.data?.Error
-                      );
-                    }
-                  });
+
+                      // Props Oncompleted
+                      onCompleted();
+                    })
+                    .catch((err) => {
+                      if (err.response) {
+                        setIsLoading(true);
+                        setShowMessage("Found Problem Try Again!!!!");
+                        console.log(
+                          err.response.status,
+                          err.response.data?.Error
+                        );
+                      }
+                    });
+                } else {
+                  // post Product
+                  axios
+                    .post(
+                      `/db_product/${context.state.shopDetails?.shopId}/product`,
+                      {
+                        name: values.name,
+                        price: values.price,
+                        isActive: values.isActive,
+                        imageSrc: values.imageSrc,
+                        description: values.description,
+                        categoryId: values.category,
+                        quanlity: values.quantity,
+                      },
+                      {
+                        headers: {
+                          authorization: `Bearer ${token}`,
+                        },
+                      }
+                    )
+                    .then((res) => {
+                      setSubmitting(false);
+                      onChangeModal(stateModal);
+                      setIsLoading(true);
+
+                      // Props Oncompleted
+                      onCompleted();
+                    })
+                    .catch((err) => {
+                      if (err.response) {
+                        setIsLoading(true);
+                        setShowMessage("Found Problem Try Again!!!!");
+                        console.log(
+                          err.response.status,
+                          err.response.data?.Error
+                        );
+                      }
+                    });
+                }
               }, 300);
             }}
           >
@@ -193,6 +250,7 @@ const ModalProduct = ({ token, onCompleted }) => {
                     {errors.file || touched.file ? errors.file : null}
                   </p>
                 </div>
+
                 {/* Product Name */}
                 <div className="mb-5 flex flex-col">
                   <div className="flex">
@@ -327,7 +385,7 @@ const ModalProduct = ({ token, onCompleted }) => {
                     <button
                       type="button"
                       className="bg-red-300 py-2 rounded text-white px-10 hover:bg-gray-300"
-                      onClick={() => setIsOpen(!isOpen)}
+                      onClick={() => onChangeModal(stateModal)}
                     >
                       Cancel
                     </button>

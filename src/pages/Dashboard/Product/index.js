@@ -12,6 +12,7 @@ import Loading from "../../../components/Loading";
 const ProductDashboard = () => {
   const [isLoading, setIsloading] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [productModal, setProductModal] = useState(null);
   const context = useContext(Context);
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState(null);
@@ -21,7 +22,14 @@ const ProductDashboard = () => {
     setPage(payload);
   };
 
-  const onChangeModal = () => {};
+  const onChangeModal = (state) => {
+    setIsModal(!state);
+  };
+
+  const onClickProduct = (product) => {
+    setProductModal(product);
+    setIsModal(true);
+  };
 
   /**
    *  Fetch all shop's product
@@ -64,7 +72,14 @@ const ProductDashboard = () => {
       {/* Header Title */}
       <div className="flex space-x-3 mb-5 items-center">
         <p className="text-3xl font-serif">Products</p>
-        <ModalProduct token={token} onCompleted={() => fetchProducts()} />
+        <ModalProduct
+          token={token}
+          onChangeModal={onChangeModal}
+          onCompleted={() => fetchProducts()}
+          stateModal={isModal}
+          onClickProduct={() => onClickProduct()}
+          product={productModal}
+        />
         <div className="flex-grow flex items-center">
           <button
             className="ml-auto bg-white shadow-md p-2  border border-gray-300 rounded-full flex space-x-3 cursor-pointer hover:text-red-400"
@@ -92,7 +107,13 @@ const ProductDashboard = () => {
           {products?.length > 0 ? (
             <tbody>
               {products?.map((data, index) => (
-                <ListProduct products={data} key={index} token={token} />
+                <ListProduct
+                  products={data}
+                  key={index}
+                  token={token}
+                  onClickProduct={(product) => onClickProduct(product)}
+                  onCompleted={() => fetchProducts()}
+                />
               ))}
             </tbody>
           ) : (
