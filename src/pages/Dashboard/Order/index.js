@@ -8,12 +8,15 @@ import ModalOrder from "./ModalOrder";
 import ListOrder from "./ListOrder";
 import RefreshIcon from "../../../components/icons/Refresh";
 import Loading from "../../../components/Loading/";
+import _ from "lodash";
 
 const OrderDashboard = () => {
   const [isLoading, setIsloading] = useState(false);
   const [fetchStatus, setFetchStatus] = useState(true);
   const [order, setOrder] = useState(null);
   const [orderStatus, setOrderStatus] = useState(null);
+  const [filter, setFilter] = useState([]);
+  const [select, setSelect] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [orderClick, setOrderClick] = useState(null);
   const context = useContext(Context);
@@ -30,6 +33,15 @@ const OrderDashboard = () => {
 
   const onChangeModal = () => {
     setIsModal(false);
+  };
+
+  const onSelect = (e) => {
+    setSelect(e.target.value);
+    const filter = _.filter(
+      order,
+      (data) => !e.target.value || (data && data.status === e.target.value)
+    );
+    setFilter(filter);
   };
 
   // Fetch OrderStatus
@@ -120,6 +132,19 @@ const OrderDashboard = () => {
           </button>
         </div>
       </div>
+
+      <div className="mb-2">
+        <select className="w-30" value={select} onChange={onSelect}>
+          <option value="">All</option>
+          {orderStatus?.map((data, index) => (
+            <option value={data.name} key={index}>
+              {data.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table */}
       <div className="w-full">
         <table className="w-full table-auto">
           <thead>
@@ -134,7 +159,7 @@ const OrderDashboard = () => {
             </tr>
           </thead>
           {order?.length ? (
-            order?.map((data, index) => (
+            filter?.map((data, index) => (
               <tbody key={index}>
                 <ListOrder order={data} handleClick={onClickTable} />
               </tbody>
