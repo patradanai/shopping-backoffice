@@ -26,7 +26,11 @@ const HistoryDashboard = () => {
       (data) => !data || (data && data?.User.email?.indexOf(input) > -1)
     );
 
-    setSliceLog(values);
+    if (input) {
+      setSliceLog(values);
+    } else {
+      setPage(0);
+    }
   };
 
   const delaySearch = _.debounce(searchFilter, 500);
