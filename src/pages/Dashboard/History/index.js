@@ -5,15 +5,41 @@ import WithAuth from "../../../components/WithAuth";
 import { axios } from "../../../utils/api/shopping";
 import ListLog from "./ListLog";
 import Pagination from "../../../components/Pagination";
+import SerchIcon from "../../../components/icons/Search";
+import _ from "lodash";
+const perPage = 10;
 
 const HistoryDashboard = () => {
   const context = useContext(Context);
-  const [page, setPage] = useState(1);
+  const [sliceLog, setSliceLog] = useState(null);
+  const [input, setInput] = useState(null);
+  const [page, setPage] = useState(0);
   const [Logs, setLogs] = useState(null);
 
   const onChangePage = (payload) => {
     setPage(payload);
   };
+
+  const searchFilter = () => {
+    const values = _.filter(
+      Logs,
+      (data) => !data || (data && data?.User.email?.indexOf(input) > -1)
+    );
+
+    setSliceLog(values);
+  };
+
+  const delaySearch = _.debounce(searchFilter, 500);
+
+  const onChnageInput = (e) => {
+    setInput(e.target.value);
+    delaySearch();
+  };
+
+  useEffect(() => {
+    const values = Logs?.slice(perPage * page, perPage + perPage * page);
+    setSliceLog(values);
+  }, [page, Logs]);
 
   useEffect(() => {
     const token = Cookie.get("token");
@@ -32,8 +58,17 @@ const HistoryDashboard = () => {
 
   return (
     <div className="w-full p-5">
-      <div className="flex space-x-3 mb-5">
+      <div className="flex space-x-3 mb-5 justify-between">
         <p className="text-3xl font-serif">Audit Logs</p>
+        <div className="flex items-center relative">
+          <SerchIcon className="w-6 h-6 text-gray-400 absolute top-1/2 right-2 transform -translate-y-1/2" />
+          <input
+            className="py-1 px-3 h-8 text-sm rounded-full outline-none"
+            placeholder="Seach"
+            onChange={onChnageInput}
+            value={input}
+          />
+        </div>
       </div>
       <div className="w-full h-full">
         <table className="w-full h-full table-auto">
@@ -49,7 +84,7 @@ const HistoryDashboard = () => {
           </thead>
           {Logs?.length > 0 ? (
             <tbody>
-              {Logs?.map((data, index) => (
+              {sliceLog?.map((data, index) => (
                 <ListLog logs={data} key={index} />
               ))}
             </tbody>
@@ -67,10 +102,16 @@ const HistoryDashboard = () => {
         </table>
       </div>
       <div className="flex  w-full justify-between  mt-1">
-        <p>Showing 1 of 1 of 1 entries</p>
+        <p>
+          Showing {perPage * page} to{" "}
+          {perPage + perPage * page > Logs?.length
+            ? Logs?.length
+            : perPage + perPage * page}{" "}
+          of {Logs?.length} entries
+        </p>
         <Pagination
-          allCounter={10}
-          counter={5}
+          allCounter={Logs?.length}
+          counter={perPage}
           onChangeCounter={onChangePage}
           focusCounter={page}
         />

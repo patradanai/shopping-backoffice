@@ -36,7 +36,7 @@ const Pagination = ({ allCounter, counter, onChangeCounter, focusCounter }) => {
   // };
 
   const onChangePagination = (number) => {
-    onChangeCounter(number.selected + 1);
+    onChangeCounter(number.selected);
   };
 
   return (
@@ -49,7 +49,7 @@ const Pagination = ({ allCounter, counter, onChangeCounter, focusCounter }) => {
         pageCount={Math.ceil(allCounter / counter)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={2}
-        initialPage={focusCounter - 1}
+        initialPage={focusCounter}
         onPageChange={onChangePagination}
         containerClassName={"pagination"}
         subContainerClassName={"pages pagination"}
