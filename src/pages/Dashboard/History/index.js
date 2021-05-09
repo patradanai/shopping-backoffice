@@ -53,7 +53,6 @@ const HistoryDashboard = () => {
       })
       .then((res) => {
         setLogs(res.data?.logs);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);

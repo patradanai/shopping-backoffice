@@ -66,7 +66,11 @@ const SignInPage = () => {
               try {
                 const res = await axios.post(
                   "/auth/signin",
-                  { username: values.email, password: values.password },
+                  {
+                    username: values.email,
+                    password: values.password,
+                    expiredIn: 1,
+                  },
                   {},
                   { validateStatus: false }
                 );
@@ -79,7 +83,7 @@ const SignInPage = () => {
                     )
                   ) {
                     const token = res.data?.token;
-                    Cookies.set("token", token, { expires: 1 });
+                    Cookies.set("token", token, { expires: 60 * (1 / 1440) });
                     setShowMessage("Welcome to E-Commerce");
                   } else {
                     setShowMessage("You don't have authority");
