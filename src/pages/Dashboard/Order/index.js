@@ -10,6 +10,8 @@ import RefreshIcon from "../../../components/icons/Refresh";
 import Loading from "../../../components/Loading/";
 import _ from "lodash";
 
+const perPage = 10;
+
 const OrderDashboard = () => {
   const [isLoading, setIsloading] = useState(false);
   const [fetchStatus, setFetchStatus] = useState(true);
@@ -20,10 +22,11 @@ const OrderDashboard = () => {
   const [isModal, setIsModal] = useState(false);
   const [orderClick, setOrderClick] = useState(null);
   const context = useContext(Context);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const onChangePage = (payload) => {
     setPage(payload);
+    setFilter("");
   };
 
   const onClickTable = (order) => {
@@ -107,6 +110,11 @@ const OrderDashboard = () => {
     fetchOrder();
   }, [context.state.shopDetails?.shopId]);
 
+  useEffect(() => {
+    const values = order?.slice(perPage * page, perPage + perPage * page);
+    setFilter(values);
+  }, [page, order]);
+
   return (
     <div className="w-full p-5">
       {/* Loading */}
@@ -180,10 +188,16 @@ const OrderDashboard = () => {
 
       {/* Pagination */}
       <div className="flex  w-full justify-between  mt-1">
-        <p>Showing 1 of 1 of 1 entries</p>
+        <p>
+          Showing {order?.length * page} of{" "}
+          {perPage + perPage * page > order?.length
+            ? order?.length
+            : perPage + perPage * page}{" "}
+          of {order?.length} entries
+        </p>
         <Pagination
-          allCounter={10}
-          counter={5}
+          allCounter={order?.length}
+          counter={perPage}
           onChangeCounter={onChangePage}
           focusCounter={page}
         />
